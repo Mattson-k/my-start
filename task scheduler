@@ -49,6 +49,7 @@ private class Employee {
 }
 
 // Team class
+import java.util.ArrayList;
 class Team {
     String name;
     List<Employee> employees;
@@ -82,6 +83,7 @@ class Team {
 }
 
 // Task class
+import java.time.LocalDate;
 class Task {
     String name;
     Date startDate;
@@ -130,6 +132,8 @@ class Task {
 }
 
 // Scheduler class
+
+import java.util.ArrayList;
 class Scheduler {
     List<Employee> employees;
     List<Team> teams;
