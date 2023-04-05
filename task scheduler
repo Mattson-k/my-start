@@ -1,0 +1,169 @@
+import java.util.*;
+
+// Employee class
+private class Employee {
+    int id;
+    String name;
+    String email;
+    List<String> skills;
+    
+    public Employee(int id, String name, String email, List<String> skills) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.skills = skills;
+    }
+    
+    // getters and setters
+    public int getId() {
+        return id;
+    }
+    
+    public void setId(int id) {
+        this.id = id;
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public String getEmail() {
+        return email;
+    }
+    
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    
+    public List<String> getSkills() {
+        return skills;
+    }
+    
+    public void setSkills(List<String> skills) {
+        this.skills = skills;
+    }
+}
+
+// Team class
+class Team {
+    String name;
+    List<Employee> employees;
+    
+    public Team(String name) {
+        this.name = name;
+        employees = new ArrayList<>();
+    }
+    
+    // getters and setters
+    public String getName() {
+        return name;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public List<Employee> getEmployees() {
+        return employees;
+    }
+    
+    public void setEmployees(List<Employee> employees) {
+        this.employees = employees;
+    }
+    
+    // add employee to team
+    public void addEmployee(Employee employee) {
+        employees.add(employee);
+    }
+}
+
+// Task class
+class Task {
+    String name;
+    Date startDate;
+    Date endDate;
+    Team team;
+    
+    public Task(String name, Date startDate, Date endDate, Team team) {
+        this.name = name;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.team = team;
+    }
+    
+    // getters and setters
+    public String getName() {
+        return name;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public Date getStartDate() {
+        return startDate;
+    }
+    
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+    
+    public Date getEndDate() {
+        return endDate;
+    }
+    
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+    
+    public Team getTeam() {
+        return team;
+    }
+    
+    public void setTeam(Team team) {
+        this.team = team;
+    }
+}
+
+// Scheduler class
+class Scheduler {
+    List<Employee> employees;
+    List<Team> teams;
+    List<Task> tasks;
+    
+    public Scheduler() {
+        employees = new ArrayList<>();
+        teams = new ArrayList<>();
+        tasks = new ArrayList<>();
+    }
+    
+    // add employee to scheduler
+    public void addEmployee(Employee employee) {
+        employees.add(employee);
+    }
+    
+    // add team to scheduler
+    public void addTeam(Team team) {
+        teams.add(team);
+    }
+    
+    // schedule task to team
+    public void scheduleTask(Task task) {
+        // find available team
+        for (Team team : teams) {
+            if (team.getEmployees().isEmpty()) {
+                continue;
+            }
+            // find available employee with required skills
+            List<Employee> availableEmployees = new ArrayList<>();
+            for (Employee employee : team.getEmployees()) {
+                if (employee.getSkills().containsAll(task.getTeam().getEmployees().get(0).getSkills())) {
+                    availableEmployees.add(employee);}
+            }
+        }
+    }
+}
