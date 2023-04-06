@@ -1,7 +1,7 @@
 import java.util.*;
 
 // Employee class
-private class Employee {
+class Employee {
     int id;
     String name;
     String email;
@@ -131,43 +131,78 @@ class Task {
     }
 }
 
-// Scheduler class
+public class Scheduler {
+            private List<Employee> employees;
+            private List<Team> teams;
 
-import java.util.ArrayList;
-class Scheduler {
-    List<Employee> employees;
-    List<Team> teams;
-    List<Task> tasks;
-    
-    public Scheduler() {
-        employees = new ArrayList<>();
-        teams = new ArrayList<>();
-        tasks = new ArrayList<>();
-    }
-    
-    // add employee to scheduler
-    public void addEmployee(Employee employee) {
-        employees.add(employee);
-    }
-    
-    // add team to scheduler
-    public void addTeam(Team team) {
-        teams.add(team);
-    }
-    
-    // schedule task to team
-    public void scheduleTask(Task task) {
-        // find available team
-        for (Team team : teams) {
-            if (team.getEmployees().isEmpty()) {
-                continue;
+            public Scheduler() {
+                this.employees = new ArrayList<>();
+                this.teams = new ArrayList<>();
             }
-            // find available employee with required skills
-            List<Employee> availableEmployees = new ArrayList<>();
-            for (Employee employee : team.getEmployees()) {
-                if (employee.getSkills().containsAll(task.getTeam().getEmployees().get(0).getSkills())) {
-                    availableEmployees.add(employee);}
+
+            public void addEmployee(Employee employee) {
+                employees.add(employee);
+            }
+
+            public void addTeam(Team team) {
+                teams.add(team);
+            }
+
+            public void scheduleTasks(LocalDate startDate, LocalDate endDate, List<Task> tasks) {
+                LocalDate currentDate = startDate;
+                int currentTaskIndex = 0;
+
+                while (!currentDate.isAfter(endDate)) {
+                    // Check if current date is a weekday
+                    if (currentDate.getDayOfWeek() == DayOfWeek.SATURDAY || currentDate.getDayOfWeek() == DayOfWeek.SUNDAY) {
+                        currentDate = currentDate.plusDays(1);
+                        continue;
+                    }
+
+                    // Get the available teams for the current date
+                    List<Team> availableTeams = new ArrayList<>();
+                    for (Team team : teams) {
+                        boolean isAvailable = true;
+                        for (Employee employee : team.getEmployees()) {
+                            if (!isEmployeeAvailable(employee, currentDate)) {
+                                isAvailable = false;
+                                break;
+                            }
+                        }
+                        if (isAvailable) {
+                            availableTeams.add(team);
+                        }
+                    }
+
+                    // Assign the next task to an available team
+                    if (currentTaskIndex < tasks.size() && availableTeams.size() > 0) {
+                        Task task = tasks.get(currentTaskIndex);
+                        Team team = availableTeams.get(0);
+                        task.setStartDate(currentDate);
+                        task.setEndDate(task.getEndDate());
+                        task.setTeam(team);
+                        currentTaskIndex++;
+                    }
+
+                    currentDate = currentDate.plusDays(1);
+                }
+            }
+
+
+                public boolean isAvailable(Employee employee, Date startDate, Date endDate) {
+                    // check if employee works on weekdays
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(startDate);
+                    while (calendar.getTime().before(endDate)) {
+                        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+                        if (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) {
+                            return false; // employee not available on weekends
+                        }
+                        calendar.add(Calendar.DAY_OF_MONTH, 1);
+                    }
+                    return true;
+                }
+
             }
         }
-    }
-}
+
